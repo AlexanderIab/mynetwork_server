@@ -14,8 +14,7 @@ import java.util.List;
 
 @Data
 @Entity
-@NoArgsConstructor
-@Table(name = "users")
+@NoArgsConstructor@Table(name = "users")
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,7 +22,9 @@ public class User implements UserDetails {
     @Column(unique = true, updatable = false)
     private String username;
     @Column(nullable = false)
-    private String fullName;
+    private String firstname;
+    @Column(nullable = false)
+    private String lastname;
     @Column(unique = true)
     private String email;
     @Column(columnDefinition = "text")
