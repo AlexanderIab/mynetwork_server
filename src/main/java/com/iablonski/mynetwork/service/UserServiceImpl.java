@@ -32,18 +32,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String username) {
-        User user = userRepository.findUserByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found with name: " + username));
-        List<GrantedAuthority> roles = new ArrayList<>();
-        roles.add(new SimpleGrantedAuthority(user.getRole().name()));
-        return new org.springframework.security.core.userdetails.
-                User(user.getUsername(),
-                user.getPassword(),
-                roles);
-    }
-
-    @Override
     public User loadUserById(Long id) {
         return userRepository.findUserById(id).orElse(null);
     }
@@ -52,9 +40,9 @@ public class UserServiceImpl implements UserService {
     public User createUser(SignUpRequest userIn) {
         User user = new User();
         user.setEmail(userIn.getEmail());
-        user.setUsername(user.getUsername());
-        user.setFirstname(user.getFirstname());
-        user.setLastname(user.getLastname());
+        user.setUsername(userIn.getUsername());
+        user.setFirstname(userIn.getFirstname());
+        user.setLastname(userIn.getLastname());
         user.setPassword(passwordEncoder.encode(userIn.getPassword()));
         user.setRole(Role.USER);
 

@@ -1,48 +1,45 @@
-package com.iablonski.mynetwork.security;
+package com.iablonski.mynetwork.security.jwt;
 
 // this class creates token
 
+import com.google.gson.GsonBuilder;
 import com.iablonski.mynetwork.entity.User;
+import com.iablonski.mynetwork.security.SecurityConstants;
+import com.iablonski.mynetwork.security.service.UserDetailsImpl;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SignatureException;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
+import org.springframework.web.util.WebUtils;
 
-import java.nio.charset.StandardCharsets;
 import java.security.Key;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 @Component
-public class JWTokenProvider {
-    public static final Logger LOG = LoggerFactory.getLogger(JWTokenProvider.class);
-
-    private Key getKey() {
-        byte[] keyByte = Decoders.BASE64.decode(SecurityConstants.SECRET_JWT);
-        return Keys.hmacShaKeyFor(keyByte);
-    }
+public class JWTUtils {
+    public static final Logger LOG = LoggerFactory.getLogger(JWTUtils.class);
 
     public String generateToken(Authentication authentication) {
-        User user = (User) authentication.getPrincipal();
+        UserDetailsImpl userPrincipal = (UserDetailsImpl) authentication.getPrincipal();
 
         Date now = new Date(System.currentTimeMillis());
         Date expiryDate = new Date(now.getTime() + SecurityConstants.EXPIRATION_TIME);
 
-        String userId = Long.toString(user.getId());
+        String userId = Long.toString(userPrincipal.getId());
 
         // Объект, который мы передаем в JWT
         Map<String, Object> claimsMap = new HashMap<>();
         claimsMap.put("id", userId);
-        claimsMap.put("username", user.getUsername());
-        claimsMap.put("fullName", user.getFullName());
+        claimsMap.put("username", userPrincipal.getUsername());
+        claimsMap.put("authorities", userPrincipal.getAuthorities());
 
         return Jwts.builder()
                 .setSubject(userId)
@@ -53,10 +50,10 @@ public class JWTokenProvider {
                 .compact();
     }
 
-    public boolean validateToken(String token) {
+    public boolean validateJWToken(String token) {
         try {
             Jwts.parserBuilder().setSigningKey(getKey()).build().parseClaimsJws(token);
-            return true;
+           return true;
         } catch (SignatureException |
                  MalformedJwtException |
                  ExpiredJwtException |
@@ -67,12 +64,16 @@ public class JWTokenProvider {
         }
     }
 
-    public Long getUserIdFromToken(String token){
+    public String getUsernameFromJWToken(String token){
         Claims claims = Jwts.parserBuilder()
                 .setSigningKey(getKey()).build()
                 .parseClaimsJws(token)
                 .getBody();
-        String id = (String) claims.get("id");
-        return Long.parseLong(id);
+        return (String) claims.get("username");
+    }
+
+    private Key getKey() {
+        byte[] keyByte = Decoders.BASE64.decode(SecurityConstants.SECRET_JWT);
+        return Keys.hmacShaKeyFor(keyByte);
     }
 }

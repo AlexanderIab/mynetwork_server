@@ -1,7 +1,8 @@
-package com.iablonski.mynetwork.security;
+package com.iablonski.mynetwork.security.jwt;
 
 import com.google.gson.Gson;
 import com.iablonski.mynetwork.payload.response.InvalidLoginResponse;
+import com.iablonski.mynetwork.security.SecurityConstants;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

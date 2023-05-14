@@ -14,8 +14,9 @@ import java.util.List;
 
 @Data
 @Entity
-@NoArgsConstructor@Table(name = "users")
-public class User implements UserDetails {
+@NoArgsConstructor
+@Table(name = "users")
+public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -38,43 +39,16 @@ public class User implements UserDetails {
     @JsonFormat(pattern = "yyyy-mm-dd HH:mm:ss")
     @Column(updatable = false)
     private LocalDateTime created;
-    @Transient
-    private Collection<? extends GrantedAuthority> authorities;
 
-    public User(Long id,
-                String nickname,
-                String email,
-                String password,
-                Collection<? extends GrantedAuthority> authorities) {
+    public User(Long id, String username, String email, String password) {
         this.id = id;
-        this.username = nickname;
+        this.username = username;
         this.email = email;
         this.password = password;
-        this.authorities = authorities;
     }
 
     @PrePersist
     public void onCreate() {
         this.created = LocalDateTime.now();
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return false;
     }
 }

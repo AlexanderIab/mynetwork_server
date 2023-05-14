@@ -1,17 +1,19 @@
-package com.iablonski.mynetwork.security;
+package com.iablonski.mynetwork.security.jwt;
 
 import com.iablonski.mynetwork.entity.User;
+import com.iablonski.mynetwork.security.SecurityConstants;
+import com.iablonski.mynetwork.security.service.UserDetailsServiceImpl;
 import com.iablonski.mynetwork.service.UserService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.NoArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -23,17 +25,17 @@ public class JWTAuthFilter extends OncePerRequestFilter {
 
     public static final Logger LOG = LoggerFactory.getLogger(JWTAuthFilter.class);
 
-    private JWTokenProvider provider;
-    private UserService userService;
+    private JWTUtils jwtUtils;
+    private UserDetailsServiceImpl userDetailsService;
 
     @Autowired
-    public void setProvider(JWTokenProvider provider) {
-        this.provider = provider;
+    public void setJwtUtils(JWTUtils jwtUtils) {
+        this.jwtUtils = jwtUtils;
     }
 
     @Autowired
-    public void setUserService(UserService userService) {
-        this.userService = userService;
+    public void setUserDetailsService(UserDetailsServiceImpl userDetailsService) {
+        this.userDetailsService = userDetailsService;
     }
 
     @Override
@@ -41,26 +43,26 @@ public class JWTAuthFilter extends OncePerRequestFilter {
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
         try {
-            String jwt = getJWTFromRequest(request);
-            if (StringUtils.hasText(jwt) && provider.validateToken(jwt)) {
-                Long userId = provider.getUserIdFromToken(jwt);
-                User user = userService.loadUserById(userId);
+            String jwt = parseJWT(request);
+            if (StringUtils.hasText(jwt) && jwtUtils.validateJWToken(jwt)) {
+                String username = jwtUtils.getUsernameFromJWToken(jwt);
+                UserDetails userDetails = userDetailsService.loadUserByUsername(username);
                 UsernamePasswordAuthenticationToken authentication
-                        = new UsernamePasswordAuthenticationToken(user, null, Collections.emptyList());
+                        = new UsernamePasswordAuthenticationToken(userDetails,
+                        null, userDetails.getAuthorities());
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
         } catch (Exception exception) {
             LOG.error(exception.getMessage());
         }
-
         filterChain.doFilter(request, response);
     }
 
-    private String getJWTFromRequest(HttpServletRequest request){
-        String bearToken = request.getHeader(SecurityConstants.HEADER_STRING);
-        if(StringUtils.hasText(bearToken) && bearToken.startsWith(SecurityConstants.TOKEN_PREFIX)){
-            return bearToken.split("")[1];
+    private String parseJWT(HttpServletRequest request){
+        String headerAuth = request.getHeader(SecurityConstants.HEADER_STRING);
+        if (StringUtils.hasText(headerAuth) && headerAuth.startsWith(SecurityConstants.TOKEN_PREFIX)) {
+            return headerAuth.substring(7);
         }
         return null;
     }

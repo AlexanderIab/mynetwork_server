@@ -35,7 +35,7 @@ create table posts
 );
 create table users
 (
-    id        int8     not null,
+    id        serial     not null,
     bio       text,
     created   timestamp(6),
     email     varchar(255),
