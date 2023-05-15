@@ -1,5 +1,6 @@
 package com.iablonski.mynetwork.service;
 
+import com.iablonski.mynetwork.dto.UserDTO;
 import com.iablonski.mynetwork.entity.Role;
 import com.iablonski.mynetwork.entity.User;
 import com.iablonski.mynetwork.exception.UserExistException;
@@ -15,6 +16,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,4 +56,23 @@ public class UserServiceImpl implements UserService {
             throw new UserExistException("User with username: " + user.getUsername() + " already exists");
         }
     }
+
+    @Override
+    public User updateUserProfile(UserDTO userDTO, Principal principal) {
+        User user = getUserFromPrincipal(principal);
+        user.setFirstname(userDTO.getFirstname());
+        user.setLastname(userDTO.getLastname());
+        user.setBio(userDTO.getBio());
+        return userRepository.save(user);
+    }
+
+
+
+    @Override
+    public User getUserFromPrincipal(Principal principal) {
+        String username = principal.getName();
+        return userRepository.findUserByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found with name: " + username));
+    }
+
 }
