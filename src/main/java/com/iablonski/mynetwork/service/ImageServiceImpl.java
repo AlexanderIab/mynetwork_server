@@ -1,14 +1,15 @@
 package com.iablonski.mynetwork.service;
 
-import com.iablonski.mynetwork.dto.ImageDTO;
 import com.iablonski.mynetwork.entity.Image;
+import com.iablonski.mynetwork.entity.Post;
 import com.iablonski.mynetwork.entity.User;
-import com.iablonski.mynetwork.exception.PostNotFoundException;
-import com.iablonski.mynetwork.repository.CommentRepository;
+import com.iablonski.mynetwork.exception.ImageNotFoundException;
 import com.iablonski.mynetwork.repository.ImageRepository;
 import com.iablonski.mynetwork.repository.PostRepository;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
@@ -16,7 +17,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+
 import java.security.Principal;
+
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.zip.DataFormatException;
@@ -26,17 +29,12 @@ import java.util.zip.Inflater;
 @Service
 public class ImageServiceImpl implements ImageService {
     public static final Logger LOG = LoggerFactory.getLogger(ImageServiceImpl.class);
-
     private final ImageRepository imageRepository;
-    private final PostRepository postRepository;
     private final UserService userService;
 
     @Autowired
-    public ImageServiceImpl(ImageRepository imageRepository,
-                            PostRepository postRepository,
-                            UserService userService) {
+    public ImageServiceImpl(ImageRepository imageRepository, UserService userService) {
         this.imageRepository = imageRepository;
-        this.postRepository = postRepository;
         this.userService = userService;
     }
 
@@ -92,13 +90,49 @@ public class ImageServiceImpl implements ImageService {
     public Image uploadProfileImageToUser(MultipartFile multipartFile, Principal principal) throws IOException {
         User user = userService.getUserFromPrincipal(principal);
         LOG.info("Uploading profile image to User {}", user.getUsername());
-        Image profileImage = imageRepository.findByUserId(user.getId())
-                .orElse(null);
-        if(!ObjectUtils.isEmpty(profileImage)) imageRepository.delete(profileImage);
+        Image profileImage = imageRepository.findByUserId(user.getId()).orElse(null);
+        if (!ObjectUtils.isEmpty(profileImage)) imageRepository.delete(profileImage);
         Image image = new Image();
         image.setUserId(user.getId());
         image.setImage(compressImage(multipartFile.getBytes()));
         image.setName(multipartFile.getOriginalFilename());
         return imageRepository.save(image);
+    }
+
+    @Override
+    public Image uploadImageToPost(MultipartFile multipartFile, Principal principal, Long postId) throws IOException {
+        User user = userService.getUserFromPrincipal(principal);
+        Post post = user.getPostList().stream()
+                .filter(p -> p.getId().equals(postId))
+                .collect(toSinglePostCollector());
+
+        Image image = new Image();
+        image.setPostId(post.getId());
+        image.setImage(compressImage(multipartFile.getBytes()));
+        image.setName(multipartFile.getOriginalFilename());
+        LOG.info("Uploading image to Post {}", post.getId());
+        return imageRepository.save(image);
+
+    }
+
+    @Override
+    public Image getImageToUser(Principal principal) {
+        User user = userService.getUserFromPrincipal(principal);
+        Image image = imageRepository.findByUserId(user.getId()).orElse(null);
+        if (!ObjectUtils.isEmpty(image)) {
+            image.setImage(decompressImage(image.getImage()));
+        }
+        return image;
+    }
+
+    @Override
+    public Image getImageToPost(Long postId) {
+        Image image = imageRepository.findByPostId(postId)
+                .orElseThrow(() -> new ImageNotFoundException("Cannot find image to Post: " + postId));
+        if (!ObjectUtils.isEmpty(image)) {
+            image.setImage(decompressImage(image.getImage()));
+        }
+
+        return image;
     }
 }

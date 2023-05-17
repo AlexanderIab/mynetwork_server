@@ -1,10 +1,12 @@
 package com.iablonski.mynetwork.dto;
 
+import lombok.Builder;
 import lombok.Data;
 
 import java.util.Set;
 
 @Data
+@Builder
 public class PostDTO {
     private Long id;
     private String title;

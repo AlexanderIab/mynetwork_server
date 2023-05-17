@@ -1,13 +1,12 @@
 package com.iablonski.mynetwork.dto;
 
-import com.iablonski.mynetwork.entity.Post;
-import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+
+import lombok.Builder;
 import lombok.Data;
 
-import java.time.LocalDateTime;
-
 @Data
+@Builder
 public class CommentDTO {
     private Long id;
     private String username;

@@ -13,4 +13,10 @@ public interface ImageService {
     <T>Collector<T, ?, T> toSinglePostCollector();
     Image uploadProfileImageToUser(MultipartFile multipartFile, Principal principal) throws IOException;
 
+    Image uploadImageToPost(MultipartFile multipartFile, Principal principal, Long postId) throws IOException;
+
+    Image getImageToUser(Principal principal);
+
+    Image getImageToPost(Long postId);
+
 }
