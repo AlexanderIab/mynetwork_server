@@ -15,5 +15,5 @@ public interface UserService {
 
     User getUserFromPrincipal(Principal principal);
 
-
+    User getUserById(Long userId);
 }

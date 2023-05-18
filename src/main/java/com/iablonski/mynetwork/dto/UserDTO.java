@@ -12,7 +12,6 @@ public class UserDTO {
     private String firstname;
     @NotBlank
     private String lastname;
-    @NotBlank
     private String username;
     private String bio;
 

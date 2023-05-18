@@ -45,7 +45,7 @@ public class PostServiceImpl implements PostService {
         post.setLocation(postDTO.getLocation());
         post.setTitle(postDTO.getTitle());
         post.setLikes(0);
-        LOG.info("Saving post {}", postDTO.getUsername());
+        LOG.info("Saving post for User {}", user.getUsername());
         return postRepository.save(post);
     }
 

@@ -9,7 +9,7 @@ import java.util.List;
 public interface CommentService {
     Comment saveComment(Long postId, CommentDTO commentDTO, Principal principal);
 
-    List<Comment> getAllCommentsForPost(Long postId);
+    List<Comment> getAllPostComments(Long postId);
 
     void deleteComment(Long commentId);
 }

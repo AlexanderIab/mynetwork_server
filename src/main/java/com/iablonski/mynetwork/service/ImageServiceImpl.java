@@ -108,6 +108,7 @@ public class ImageServiceImpl implements ImageService {
 
         Image image = new Image();
         image.setPostId(post.getId());
+        image.setImage(multipartFile.getBytes());
         image.setImage(compressImage(multipartFile.getBytes()));
         image.setName(multipartFile.getOriginalFilename());
         LOG.info("Uploading image to Post {}", post.getId());

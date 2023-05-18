@@ -1,6 +1,11 @@
 package com.iablonski.mynetwork.payload.response;
 
+import com.iablonski.mynetwork.dto.UserDTO;
+import com.iablonski.mynetwork.entity.User;
 import lombok.Getter;
+import org.springframework.http.ResponseEntity;
+
+import java.security.Principal;
 
 @Getter
 public class InvalidLoginResponse {

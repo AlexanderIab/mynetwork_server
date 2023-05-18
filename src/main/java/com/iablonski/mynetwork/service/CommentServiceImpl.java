@@ -51,7 +51,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public List<Comment> getAllCommentsForPost(Long postId) {
+    public List<Comment> getAllPostComments(Long postId) {
         Post post = postRepository.findPostById(postId)
                 .orElseThrow(() -> new PostNotFoundException("Post not found"));
         return commentRepository.findAllByPost(post);
