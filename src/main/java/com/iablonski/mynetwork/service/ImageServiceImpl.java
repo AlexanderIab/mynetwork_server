@@ -107,6 +107,7 @@ public class ImageServiceImpl implements ImageService {
                 .collect(toSinglePostCollector());
 
         Image image = new Image();
+        image.setUserId(user.getId());
         image.setPostId(post.getId());
         image.setImage(multipartFile.getBytes());
         image.setImage(compressImage(multipartFile.getBytes()));

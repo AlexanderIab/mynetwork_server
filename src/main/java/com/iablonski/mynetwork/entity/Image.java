@@ -6,10 +6,11 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import net.minidev.json.annotate.JsonIgnore;
 import org.hibernate.annotations.JdbcType;
+import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.annotations.Type;
 import org.hibernate.type.descriptor.jdbc.VarbinaryJdbcType;
 
-import javax.lang.model.util.Types;
+import java.sql.Types;
 
 @Data
 @Entity
@@ -23,7 +24,7 @@ public class Image {
     private String name;
     @Lob
     @Column(columnDefinition = "bytea")
-    @JdbcType(VarbinaryJdbcType.class)
+    @JdbcTypeCode(Types.LONGVARBINARY)
     private byte[] image;
     @JsonIgnore
     private Long userId;
