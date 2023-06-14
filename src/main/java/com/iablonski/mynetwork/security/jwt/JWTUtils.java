@@ -2,21 +2,19 @@ package com.iablonski.mynetwork.security.jwt;
 
 // this class creates token
 
-import com.google.gson.GsonBuilder;
-import com.iablonski.mynetwork.entity.User;
 import com.iablonski.mynetwork.security.SecurityConstants;
 import com.iablonski.mynetwork.security.service.UserDetailsImpl;
+
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SignatureException;
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletRequest;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
-import org.springframework.web.util.WebUtils;
 
 import java.security.Key;
 import java.util.Date;
@@ -53,7 +51,7 @@ public class JWTUtils {
     public boolean validateJWToken(String token) {
         try {
             Jwts.parserBuilder().setSigningKey(getKey()).build().parseClaimsJws(token);
-           return true;
+            return true;
         } catch (SignatureException |
                  MalformedJwtException |
                  ExpiredJwtException |
@@ -64,7 +62,7 @@ public class JWTUtils {
         }
     }
 
-    public String getUsernameFromJWToken(String token){
+    public String getUsernameFromJWToken(String token) {
         Claims claims = Jwts.parserBuilder()
                 .setSigningKey(getKey()).build()
                 .parseClaimsJws(token)

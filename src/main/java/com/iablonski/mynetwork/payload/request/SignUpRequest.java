@@ -2,9 +2,11 @@ package com.iablonski.mynetwork.payload.request;
 
 import com.iablonski.mynetwork.validation.MatchingPasswords;
 import com.iablonski.mynetwork.validation.ValidEmail;
+
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+
 import lombok.Data;
 
 @Data
@@ -24,5 +26,4 @@ public class SignUpRequest {
     @Size(min = 4)
     private String password;
     private String passwordConfirmation;
-
 }

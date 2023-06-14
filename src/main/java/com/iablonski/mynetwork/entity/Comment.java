@@ -1,6 +1,7 @@
 package com.iablonski.mynetwork.entity;
 
 import jakarta.persistence.*;
+
 import lombok.Data;
 import lombok.NoArgsConstructor;
 

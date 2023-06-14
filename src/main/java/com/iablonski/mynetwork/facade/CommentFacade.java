@@ -2,6 +2,7 @@ package com.iablonski.mynetwork.facade;
 
 import com.iablonski.mynetwork.dto.CommentDTO;
 import com.iablonski.mynetwork.entity.Comment;
+
 import org.springframework.stereotype.Component;
 
 @Component

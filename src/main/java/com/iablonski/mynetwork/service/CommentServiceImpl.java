@@ -7,9 +7,10 @@ import com.iablonski.mynetwork.entity.User;
 import com.iablonski.mynetwork.exception.PostNotFoundException;
 import com.iablonski.mynetwork.repository.CommentRepository;
 import com.iablonski.mynetwork.repository.PostRepository;
-import com.iablonski.mynetwork.repository.UserRepository;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,7 +21,6 @@ import java.util.Optional;
 @Service
 public class CommentServiceImpl implements CommentService {
     public static final Logger LOG = LoggerFactory.getLogger(CommentServiceImpl.class);
-
     private final CommentRepository commentRepository;
     private final PostRepository postRepository;
     private final UserService userService;
@@ -33,7 +33,6 @@ public class CommentServiceImpl implements CommentService {
         this.postRepository = postRepository;
         this.userService = userService;
     }
-
 
     @Override
     public Comment saveComment(Long postId, CommentDTO commentDTO, Principal principal) {

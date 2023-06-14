@@ -5,7 +5,6 @@ import com.iablonski.mynetwork.entity.Post;
 import com.iablonski.mynetwork.entity.User;
 import com.iablonski.mynetwork.exception.ImageNotFoundException;
 import com.iablonski.mynetwork.repository.ImageRepository;
-import com.iablonski.mynetwork.repository.PostRepository;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -114,7 +113,6 @@ public class ImageServiceImpl implements ImageService {
         image.setName(multipartFile.getOriginalFilename());
         LOG.info("Uploading image to Post {}", post.getId());
         return imageRepository.save(image);
-
     }
 
     @Override

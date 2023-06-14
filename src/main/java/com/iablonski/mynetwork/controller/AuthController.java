@@ -8,7 +8,9 @@ import com.iablonski.mynetwork.security.SecurityConstants;
 import com.iablonski.mynetwork.security.jwt.JWTUtils;
 import com.iablonski.mynetwork.service.UserService;
 import com.iablonski.mynetwork.validation.ResponseErrorValid;
+
 import jakarta.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -26,10 +28,10 @@ import org.springframework.web.bind.annotation.*;
 @PreAuthorize("permitAll()")
 public class AuthController {
 
-    private JWTUtils jwtUtils;
-    private AuthenticationManager authenticationManager;
-    private ResponseErrorValid responseErrorValid;
-    private UserService userService;
+    private final JWTUtils jwtUtils;
+    private final AuthenticationManager authenticationManager;
+    private final ResponseErrorValid responseErrorValid;
+    private final UserService userService;
 
     @Autowired
     public AuthController(JWTUtils jwtUtils,
@@ -50,16 +52,15 @@ public class AuthController {
 
         Authentication authentication = authenticationManager
                 .authenticate(new UsernamePasswordAuthenticationToken(
-                loginRequest.getUsername(),
-                loginRequest.getPassword()
-        ));
+                        loginRequest.getUsername(),
+                        loginRequest.getPassword()
+                ));
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String jwt = SecurityConstants.TOKEN_PREFIX + jwtUtils.generateToken(authentication);
 
         return ResponseEntity.ok(new JWTTokenSuccessResponse(true, jwt));
     }
-
 
     @PostMapping("/signup")
     public ResponseEntity<Object> userRegistration(@Valid @RequestBody SignUpRequest signupRequest,

@@ -1,12 +1,13 @@
 package com.iablonski.mynetwork.security.jwt;
 
 import com.google.gson.Gson;
+
 import com.iablonski.mynetwork.payload.response.InvalidLoginResponse;
 import com.iablonski.mynetwork.security.SecurityConstants;
+
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jdk.jfr.Category;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
@@ -20,7 +21,7 @@ public class JWTAuthEntryPoint implements AuthenticationEntryPoint {
     @Override
     public void commence(HttpServletRequest request,
                          HttpServletResponse response,
-                         AuthenticationException authException) throws IOException, ServletException {
+                         AuthenticationException authException) throws IOException {
         InvalidLoginResponse loginResponse = new InvalidLoginResponse();
         String jsonLoginResponse = new Gson().toJson(loginResponse);
         response.setContentType(SecurityConstants.CONTENT_TYPE);

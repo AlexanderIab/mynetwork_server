@@ -2,6 +2,7 @@ package com.iablonski.mynetwork.repository;
 
 import com.iablonski.mynetwork.entity.Comment;
 import com.iablonski.mynetwork.entity.Post;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

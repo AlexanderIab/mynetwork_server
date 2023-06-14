@@ -2,8 +2,8 @@ package com.iablonski.mynetwork.facade;
 
 import com.iablonski.mynetwork.dto.UserDTO;
 import com.iablonski.mynetwork.entity.User;
+
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.CrossOrigin;
 
 @Component
 public class UserFacade {

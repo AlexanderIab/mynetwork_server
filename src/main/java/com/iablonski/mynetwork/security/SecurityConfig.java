@@ -3,6 +3,7 @@ package com.iablonski.mynetwork.security;
 import com.iablonski.mynetwork.security.jwt.JWTAuthEntryPoint;
 import com.iablonski.mynetwork.security.jwt.JWTAuthFilter;
 import com.iablonski.mynetwork.security.service.UserDetailsServiceImpl;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,7 +22,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
-public class SecurityConfig{
+public class SecurityConfig {
 
     private JWTAuthEntryPoint entryPoint;
     private UserDetailsServiceImpl userDetailsService;

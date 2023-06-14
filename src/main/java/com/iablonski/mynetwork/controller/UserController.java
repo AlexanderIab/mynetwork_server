@@ -5,7 +5,9 @@ import com.iablonski.mynetwork.entity.User;
 import com.iablonski.mynetwork.facade.UserFacade;
 import com.iablonski.mynetwork.service.UserService;
 import com.iablonski.mynetwork.validation.ResponseErrorValid;
+
 import jakarta.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,9 +21,9 @@ import java.security.Principal;
 @RequestMapping("api/user")
 @CrossOrigin
 public class UserController {
-    private UserService userService;
-    private UserFacade userFacade;
-    private ResponseErrorValid responseErrorValid;
+    private final UserService userService;
+    private final UserFacade userFacade;
+    private final ResponseErrorValid responseErrorValid;
 
     @Autowired
     public UserController(UserService userService, UserFacade userFacade, ResponseErrorValid responseErrorValid) {
@@ -31,14 +33,14 @@ public class UserController {
     }
 
     @GetMapping("/")
-    public ResponseEntity<UserDTO> getCurrentUser(Principal principal){
+    public ResponseEntity<UserDTO> getCurrentUser(Principal principal) {
         User user = userService.getUserFromPrincipal(principal);
         UserDTO userDTO = userFacade.userToUserDTO(user);
         return new ResponseEntity<>(userDTO, HttpStatus.OK);
     }
 
     @GetMapping("/{userId}")
-    public ResponseEntity<UserDTO> getUserProfile(@PathVariable("userId") String userId){
+    public ResponseEntity<UserDTO> getUserProfile(@PathVariable("userId") String userId) {
         User user = userService.getUserById(Long.parseLong(userId));
         UserDTO userDTO = userFacade.userToUserDTO(user);
         return new ResponseEntity<>(userDTO, HttpStatus.OK);
@@ -47,13 +49,11 @@ public class UserController {
     @PutMapping("/update")
     public ResponseEntity<Object> updateUser(@Valid @RequestBody UserDTO userDTO,
                                              BindingResult bindingResult,
-                                             Principal principal){
+                                             Principal principal) {
         ResponseEntity<Object> errors = responseErrorValid.mapValidationService(bindingResult);
         if (!ObjectUtils.isEmpty(errors)) return errors;
         User user = userService.updateUserProfile(userDTO, principal);
         UserDTO updatedUser = userFacade.userToUserDTO(user);
         return new ResponseEntity<>(updatedUser, HttpStatus.OK);
     }
-
-
 }

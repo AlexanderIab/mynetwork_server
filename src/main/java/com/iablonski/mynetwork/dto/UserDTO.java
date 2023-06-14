@@ -1,6 +1,7 @@
 package com.iablonski.mynetwork.dto;
 
 import jakarta.validation.constraints.NotBlank;
+
 import lombok.Builder;
 import lombok.Data;
 
@@ -14,5 +15,4 @@ public class UserDTO {
     private String lastname;
     private String username;
     private String bio;
-
 }

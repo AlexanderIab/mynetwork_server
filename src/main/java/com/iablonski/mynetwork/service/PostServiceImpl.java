@@ -5,14 +5,13 @@ import com.iablonski.mynetwork.entity.Image;
 import com.iablonski.mynetwork.entity.Post;
 import com.iablonski.mynetwork.entity.User;
 import com.iablonski.mynetwork.exception.PostNotFoundException;
-import com.iablonski.mynetwork.exception.UserExistException;
 import com.iablonski.mynetwork.repository.ImageRepository;
 import com.iablonski.mynetwork.repository.PostRepository;
-import com.iablonski.mynetwork.repository.UserRepository;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.security.Principal;
@@ -22,7 +21,6 @@ import java.util.Optional;
 @Service
 public class PostServiceImpl implements PostService {
     public static final Logger LOG = LoggerFactory.getLogger(PostServiceImpl.class);
-
     private final PostRepository postRepository;
     private final ImageRepository imageRepository;
     private final UserService userService;

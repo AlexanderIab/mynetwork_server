@@ -1,8 +1,11 @@
 package com.iablonski.mynetwork.security.service;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import com.iablonski.mynetwork.entity.User;
+
 import lombok.Getter;
+
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -34,7 +37,6 @@ public class UserDetailsImpl implements UserDetails {
         authorities.add(new SimpleGrantedAuthority(user.getRole().name()));
         return new UserDetailsImpl(user.getId(), user.getUsername(), user.getEmail(), user.getPassword(), authorities);
     }
-
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
