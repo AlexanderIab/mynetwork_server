@@ -6,7 +6,7 @@ spring:
 
   datasource:
     url: jdbc:postgresql://localhost:5432/myNetwork
-    username: iablonski
-    password: aspireASPIRE1
+    username: ...
+    password: ...
   flyway:
     baseline-on-migrate: true
